@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import ProfileRouter from "./routes/profileRoutes.js";
 import SkillsRouter from "./routes/skillsRoutes.js";  
 import ProjectsRouter from "./routes/projectsRoutes.js";
+import UploadRouter from "./routes/uploadRoutes.js";
 dotenv.config();
 // Create Express server
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use("/api/profile", ProfileRouter);
 app.use("/api/skills", SkillsRouter);
 app.use("/api/projects", ProjectsRouter);
+app.use("/api/upload", UploadRouter);
 
 // Start the Express server
 const port = process.env.PORT || 3000;
