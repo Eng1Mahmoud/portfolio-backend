@@ -5,8 +5,7 @@
       "src": "dist/app.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/**"],
-        "nodeVersion": "18.x"
+        "includeFiles": ["dist/**"]
       }
     }
   ],
