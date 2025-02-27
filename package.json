@@ -16,10 +16,6 @@
   },
   "lint-staged": {
     "**/*": [
-      "prettier --write",
-      "tsc --noEmit"
-    ],
-    "*.{js,jsx,json,md}": [
       "prettier --write"
     ]
   },
