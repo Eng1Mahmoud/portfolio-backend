@@ -1,18 +1,28 @@
-import { connect } from 'mongoose';
+import { connect } from "mongoose"
+
+// Cache the database connection
+let isConnected = false
 
 const connectDB = async () => {
-    console.log( process.env.DATABASE_URL);
-    try {
-        if (!process.env.DATABASE_URL) {
-            throw new Error('DATABASE_URL is not defined in environment variables');
-        }
-        
-        await connect(process.env.DATABASE_URL);
-        console.log('✅ MongoDB connected');
-    } catch (error) {
-        console.error('❌ MongoDB connection failed:', error);
-        process.exit(1);
-    }
-};
+  // If already connected, reuse the connection
+  if (isConnected) {
+    return
+  }
 
-export default connectDB;
+  try {
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL is not defined in environment variables")
+    }
+
+    await connect(process.env.DATABASE_URL)
+    isConnected = true
+    console.log("✅ MongoDB connected")
+  } catch (error) {
+    isConnected = false
+    console.error("❌ MongoDB connection error:", error)
+    throw error // Let the error be handled by the route handler
+  }
+}
+
+export default connectDB
+
