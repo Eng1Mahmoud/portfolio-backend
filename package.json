@@ -15,8 +15,11 @@
     "type-check": "tsc --noEmit"
   },
   "lint-staged": {
-    "/src/**/*.{ts,tsx}": [
+    "src/**/*.{ts,tsx}": [
       "tsc --noEmit",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md}": [
       "prettier --write"
     ]
   },
