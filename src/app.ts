@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import ProfileRouter from "./routes/profileRoutes.js";
-import SkillsRouter from "./routes/skillsRoutes.js";  
+import SkillsRouter from "./routes/skillsRoutes.js";
 import ProjectsRouter from "./routes/projectsRoutes.js";
 import UploadRouter from "./routes/uploadRoutes.js";
 import AuthRouter from "./routes/authRoutes.js";
@@ -19,7 +19,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello from TypeScript Express!");
 });
-app.use("/api/auth" , AuthRouter);
+console.log("test");
+app.use("/api/auth", AuthRouter);
 app.use("/api/profile", ProfileRouter);
 app.use("/api/skills", SkillsRouter);
 app.use("/api/projects", ProjectsRouter);
@@ -27,22 +28,6 @@ app.use("/api/upload", UploadRouter);
 
 // Start the Express server
 const port = process.env.PORT || 3000;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
