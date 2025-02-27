@@ -13,7 +13,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "**/*": [
+    "/*": [
       "prettier --write",
       "next lint --no-cache --fix . "
     ]
