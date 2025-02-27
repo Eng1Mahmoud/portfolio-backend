@@ -16,9 +16,7 @@
   },
   "lint-staged": {
     "/src/**/*.{ts,tsx}": [
-      "tsc --noEmit"
-    ],
-    "**/*": [
+      "tsc --noEmit",
       "prettier --write"
     ]
   },
