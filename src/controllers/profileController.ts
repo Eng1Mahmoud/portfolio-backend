@@ -5,6 +5,7 @@ class ProfileController {
     async createProfile(req: Request, res: Response) {
         try {
             const profile = new Profile(req.body);
+            console.log(profile)
             await profile.save();
             res.status(201).json(profile);
         } catch (error: any) {
