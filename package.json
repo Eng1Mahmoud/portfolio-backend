@@ -10,7 +10,8 @@
     "start": "node ./dist/app.js",
     "dev": "nodemon",
     "build": "tsc",
-    "prepare": "husky"
+    "prepare": "husky install",
+      "format": "prettier --write ."
   },
   "lint-staged": {
     "/*": [
