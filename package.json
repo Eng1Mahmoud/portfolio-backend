@@ -11,12 +11,16 @@
     "dev": "nodemon",
     "build": "tsc",
     "prepare": "husky install",
-      "format": "prettier --write ."
+    "format": "prettier --write .",
+    "type-check": "tsc --noEmit"
   },
   "lint-staged": {
-    "/*": [
+    "*.{ts,tsx}": [
       "prettier --write",
-      "next lint --no-cache --fix . "
+      "tsc --noEmit"
+    ],
+    "*.{js,jsx,json,md}": [
+      "prettier --write"
     ]
   },
   "devDependencies": {
