@@ -12,7 +12,7 @@
     "build": "tsc",
     "prepare": "husky install",
     "format": "prettier --write .",
-    "add-build": "git add dist"
+    "add-build": "git add dist -f"
   },
   "lint-staged": {
     "*.{js,jsx,json,md}": [
