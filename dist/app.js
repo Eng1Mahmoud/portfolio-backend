@@ -19,7 +19,6 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("Hello from TypeScript Express!");
 });
-console.log("test");
 app.use("/api/auth", AuthRouter);
 app.use("/api/profile", ProfileRouter);
 app.use("/api/skills", SkillsRouter);
@@ -27,7 +26,6 @@ app.use("/api/projects", ProjectsRouter);
 app.use("/api/upload", UploadRouter);
 // Start the Express server
 const port = process.env.PORT || 3000;
-console.log(port);
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
