@@ -14,12 +14,8 @@
     "format": "prettier --write .",
     "add-build": "git add dist -f"
   },
-  "lint-staged": {
-    "*.{js,jsx,json,md}": [
-      "prettier --write"
-    ]
-  },
   "pre-commit": [
+    "format",
     "build",
     "add-build"
   ],
