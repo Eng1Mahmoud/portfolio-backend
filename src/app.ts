@@ -19,7 +19,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello from TypeScript Express!");
 });
-console.log("test")
+console.log("test new from dev ")
 app.use("/api/auth", AuthRouter);
 app.use("/api/profile", ProfileRouter);
 app.use("/api/skills", SkillsRouter);
