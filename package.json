@@ -10,7 +10,8 @@
     "start": "node ./dist/app.js",
     "dev": "nodemon",
     "build": "rimraf dist && tsc",
-    "add-build": "git add dist"
+    "add-build": "git add dist",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
