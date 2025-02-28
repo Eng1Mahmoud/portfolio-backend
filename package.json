@@ -14,11 +14,16 @@
     "format": "prettier --write .",
     "add-build": "git add dist -f"
   },
-  "pre-commit": [
-    "format",
-    "build",
-    "add-build"
-  ],
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "npm run build",
+      "npm run add-build"
+    ],
+    "*.{js,jsx,json,md}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
