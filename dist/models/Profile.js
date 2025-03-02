@@ -8,8 +8,7 @@ const ProfileSchema = new Schema({
     bio: { type: String, required: true },
     avatar: { type: String, required: true },
     aboutImage: { type: String, required: true },
-    skills: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
-    projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+    cv: { type: String, required: true },
 });
 const Profile = mongoose.model('Profile', ProfileSchema);
 export default Profile;

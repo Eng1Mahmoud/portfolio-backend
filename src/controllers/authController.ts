@@ -36,7 +36,7 @@ class AuthController {
       if (user && (await bcrypt.compare(password, user.password))) {
         res.status(200).json({
           message:"You are login successfully!",
-          token: generateToken(user._id.toString()),
+          token: generateToken(user._id.toString(),user.role),
         });
       } else {
         res.status(401).json({ message: "Invalid credentials" });
@@ -47,8 +47,8 @@ class AuthController {
   }
 }
 
-const generateToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET!, {
+const generateToken = (id: string,role:string) => {
+  return jwt.sign({ id,role }, process.env.JWT_SECRET!, {
     expiresIn: "30d",
   });
 };
