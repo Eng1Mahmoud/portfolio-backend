@@ -8,8 +8,7 @@ interface IProfile extends Document {
     bio: string,
     avatar: string,
     aboutImage: string,
-    skills: string[];
-    projects: string[];
+    cv: string,
 }
 const ProfileSchema: Schema = new Schema({
     userName: { type: String, required: true },
@@ -20,8 +19,7 @@ const ProfileSchema: Schema = new Schema({
     bio: { type: String, required: true },
     avatar: { type: String, required: true },
     aboutImage: { type: String, required: true },
-    skills: [{ type: Schema.Types.ObjectId, ref: 'Skill' }],
-    projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+    cv: { type: String, required: true },
 });
 
 const Profile = mongoose.model<IProfile>('Profile', ProfileSchema);
