@@ -1,15 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
-interface IProfile extends Document {
-    userName: string;
-    title: string;
-    email: string;
-    phone1: string;
-    phone2: string;
-    bio: string,
-    avatar: string,
-    aboutImage: string,
-    cv: string,
-}
+import {model,Schema } from 'mongoose';
 const ProfileSchema: Schema = new Schema({
     userName: { type: String, required: true },
     title: { type: String, required: true },
@@ -22,6 +11,6 @@ const ProfileSchema: Schema = new Schema({
     cv: { type: String, required: true },
 });
 
-const Profile = mongoose.model<IProfile>('Profile', ProfileSchema);
+const Profile = model('Profile', ProfileSchema);
 
 export default Profile;

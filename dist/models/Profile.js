@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 const ProfileSchema = new Schema({
     userName: { type: String, required: true },
     title: { type: String, required: true },
@@ -10,5 +10,5 @@ const ProfileSchema = new Schema({
     aboutImage: { type: String, required: true },
     cv: { type: String, required: true },
 });
-const Profile = mongoose.model('Profile', ProfileSchema);
+const Profile = model('Profile', ProfileSchema);
 export default Profile;
