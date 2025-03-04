@@ -18,7 +18,7 @@ class SkillsController {
         try {
             // req.params.id gets the ID from the URL (e.g., /skills/1)
             // req.body contains the updated skill data
-            const skill = await Skill.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            await Skill.findByIdAndUpdate(req.params.id, req.body, { new: true });
             res.status(200).json({
                 message: 'Skill updated successfully',
             });
@@ -44,6 +44,18 @@ class SkillsController {
             res.status(200).json({
                 message: 'Skills retrieved successfully',
                 skills:skills,
+            });
+        } catch (error:any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+    // get a skill by id
+    async getSkillById(req: Request, res: Response) {
+        try {
+            const skill = await Skill.findById(req.params.id).select('name imageUrl _id');
+            res.status(200).json({
+                message: 'Skill retrieved successfully',
+                skill:skill,
             });
         } catch (error:any) {
             res.status(500).json({ message: error.message });

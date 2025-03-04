@@ -20,5 +20,9 @@ router.put("/:id", (req: Request, res: Response) => {
 router.delete("/:id", (req: Request, res: Response) => {
   SkillsController.deleteSkill(req, res);
 });
+// get a skill by id
+router.get("/:id", (req: Request, res: Response) => {
+  SkillsController.getSkillById(req, res);
+});
 
 export default router;
