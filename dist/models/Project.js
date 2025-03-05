@@ -8,16 +8,16 @@ const projectSchema = new Schema({
         type: String,
         required: true,
     },
-    image: {
+    imageUrl: {
         type: String,
         required: true,
     },
-    link: {
+    demoLink: {
         type: String,
         required: true,
     },
-    technologies: {
-        type: [String],
+    githubLink: {
+        type: String,
         required: true,
     },
     createdAt: {

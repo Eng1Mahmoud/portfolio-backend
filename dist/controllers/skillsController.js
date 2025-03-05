@@ -43,7 +43,6 @@ class SkillsController {
         try {
             const skills = await Skill.find().select('name imageUrl _id');
             res.status(200).json({
-                message: 'Skills retrieved successfully',
                 skills: skills,
             });
         }
@@ -56,7 +55,6 @@ class SkillsController {
         try {
             const skill = await Skill.findById(req.params.id).select('name imageUrl _id');
             res.status(200).json({
-                message: 'Skill retrieved successfully',
                 skill: skill,
             });
         }
