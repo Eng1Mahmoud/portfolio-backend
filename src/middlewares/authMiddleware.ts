@@ -6,7 +6,7 @@ declare global {
     interface Request {
       user?: {
         id: string;
-        isAdmin: boolean;
+        role: string;
       };
     }
   }
@@ -24,9 +24,9 @@ export const protect = async (
       return res.status(401).json({ error: "Not authorized" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string; isAdmin: boolean };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string; role: string };
     
-    if (!decoded.isAdmin) {
+    if (decoded.role !== "admin") {
       return res.status(403).json({ error: "Admin access required" });
     }
 

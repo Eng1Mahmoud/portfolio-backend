@@ -6,7 +6,7 @@ export const protect = async (req, res, next) => {
             return res.status(401).json({ error: "Not authorized" });
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (!decoded.isAdmin) {
+        if (decoded.role !== "admin") {
             return res.status(403).json({ error: "Admin access required" });
         }
         req.user = decoded;
