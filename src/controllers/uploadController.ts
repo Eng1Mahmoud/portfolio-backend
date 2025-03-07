@@ -30,9 +30,8 @@ class UploadController {
           .end(req.file!.buffer);
       });
 
-      res.json({
-        url: (result as any).secure_url,
-        publicId: (result as any).public_id,
+      res.status(201).json({
+        url: (result as any).secure_url
       });
     } catch (error) {
       console.error("Full error:", error);
