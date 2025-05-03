@@ -30,7 +30,7 @@ class UploadController {
       );
       console.log("Pronto.io response:", response.data);
       res.status(201).json({
-        url: response.data.url
+        url: response.data.file.url
       });
     } catch (error) {
       console.error("Full error:", error);
