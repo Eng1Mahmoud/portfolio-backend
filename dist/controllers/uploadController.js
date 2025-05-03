@@ -1,26 +1,33 @@
-import axios from "axios";
+import cloudinary from "../config/cloudinary.js";
 class UploadController {
     async uploadImage(req, res) {
         try {
             if (!req.file) {
                 return res.status(400).json({ message: "No file uploaded" });
             }
-            // Convert buffer to base64
-            const base64Image = req.file.buffer.toString('base64');
-            // Upload to Pronto.io
-            const response = await axios.post('https://api.getpronto.io/v1/upload', {
-                image: base64Image,
-                name: req.file.originalname || 'uploaded-image'
-            }, {
-                headers: {
-                    "ApiKey": `${process.env.PRONTO_API_KEY}`,
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                }
+            // Upload to Cloudinary
+            const result = await new Promise((resolve, reject) => {
+                const options = {
+                    resource_type: "auto",
+                    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+                    api_key: process.env.CLOUDINARY_API_KEY,
+                    api_secret: process.env.CLOUDINARY_API_SECRET,
+                    folder: 'portfolio'
+                };
+                cloudinary.uploader
+                    .upload_stream(options, (error, result) => {
+                    if (error) {
+                        console.error("Cloudinary upload error:", error);
+                        reject(error);
+                    }
+                    else {
+                        resolve(result);
+                    }
+                })
+                    .end(req.file.buffer);
             });
-            console.log("Pronto.io response:", response.data);
             res.status(201).json({
-                url: response.data.file.url
+                url: result.secure_url
             });
         }
         catch (error) {
