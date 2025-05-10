@@ -1,5 +1,4 @@
 // src/types/index.ts
-
 export interface Profile {
     name: string;
     title: string;
@@ -26,3 +25,20 @@ export interface CV {
     skills: Skill[];
     projects: Project[];
 }
+
+// SirvConfig 
+export interface SirvConfig {
+    clientId: string;
+    clientSecret: string;
+    baseUrl: string;
+    uploadPath: string;
+    tokenPath: string;
+    domain: string;
+  }
+
+  // TokenResponse
+export interface TokenResponse {
+    token: string;
+    expiresIn: number;
+  }
+  
