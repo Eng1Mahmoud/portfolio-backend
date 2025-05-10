@@ -1,6 +1,7 @@
-import cloudinary from "../config/cloudinary.js";
 // src/controllers/uploadController.ts
 import express from "express";
+import { uploadToSirv } from "../config/sirv.js";
+import { Console } from "console";
 
 class UploadController {
   async uploadImage(req: express.Request, res: express.Response) {
@@ -9,29 +10,12 @@ class UploadController {
         return res.status(400).json({ message: "No file uploaded" });
       }
 
-      // Upload to Cloudinary
-      const result = await new Promise((resolve, reject) => {
-        const options: any = {
-          resource_type: "auto",
-          cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-          api_key: process.env.CLOUDINARY_API_KEY,
-          api_secret: process.env.CLOUDINARY_API_SECRET,
-          folder: 'portfolio'
-        };
-        cloudinary.uploader
-          .upload_stream(options, (error, result) => {
-            if (error) {
-              console.error("Cloudinary upload error:", error);
-              reject(error);
-            } else {
-              resolve(result);
-            }
-          })
-          .end(req.file!.buffer);
-      });
-
+      // Upload to Sirv
+      const filename = req.file!.originalname || 'upload.jpg';
+      const imageUrl = await uploadToSirv(req.file!.buffer, filename);
+      console.log("Image URL:", imageUrl);
       res.status(201).json({
-        url: (result as any).secure_url
+        url: imageUrl
       });
     } catch (error) {
       console.error("Full error:", error);
