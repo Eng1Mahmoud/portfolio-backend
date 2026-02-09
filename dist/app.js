@@ -8,6 +8,7 @@ import SkillsRouter from "./routes/skillsRoutes.js";
 import ProjectsRouter from "./routes/projectsRoutes.js";
 import UploadRouter from "./routes/uploadRoutes.js";
 import AuthRouter from "./routes/authRoutes.js";
+import ChatRouter from "./routes/chatRoutes.js";
 dotenv.config();
 // Create Express server
 const app = express();
@@ -19,7 +20,7 @@ app.use(express.json());
 // Apply protect middleware to all write operations
 const protectWriteOperations = async (req, res, next) => {
     const writeOperations = ['POST', 'PUT', 'PATCH', 'DELETE'];
-    if (writeOperations.includes(req.method) && !req.path.includes('/api/auth')) {
+    if (writeOperations.includes(req.method) && !req.path.includes('/api/auth') && !req.path.includes('/api/chat')) {
         try {
             await protect(req, res, next);
         }
@@ -42,6 +43,7 @@ app.use("/api/profile", ProfileRouter);
 app.use("/api/skills", SkillsRouter);
 app.use("/api/projects", ProjectsRouter);
 app.use("/api/upload", UploadRouter);
+app.use("/api/chat", ChatRouter);
 // Start the Express server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
