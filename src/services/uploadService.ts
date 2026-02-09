@@ -10,7 +10,6 @@ class UploadService {
 
             const filename = req.file.originalname || "upload.jpg";
             const imageUrl = await uploadToSirv(req.file.buffer, filename);
-            console.log("Image URL:", imageUrl);
             res.status(201).json({
                 url: imageUrl,
             });
