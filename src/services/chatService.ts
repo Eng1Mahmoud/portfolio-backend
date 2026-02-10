@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { GoogleGenAI } from "@google/genai";
 import axios from "axios";
-import { PDFParse } from "pdf-parse";
+import pdfParse from "pdf-parse";
 
 import Profile from "../models/Profile.js";
 import Skill from "../models/Skill.js";
@@ -119,8 +119,8 @@ class ChatService {
     private async getCVContent(url: string): Promise<string> {
         try {
             const response = await axios.get(url, { responseType: "arraybuffer" });
-            const parser = new PDFParse({ data: response.data });
-            const result = await parser.getText();
+            const dataBuffer = Buffer.from(response.data);
+            const result = await pdfParse(dataBuffer);
             return result.text;
         } catch (error) {
             throw new Error(`Failed to parse CV: ${error}`);
