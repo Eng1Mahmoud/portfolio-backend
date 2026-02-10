@@ -5,7 +5,10 @@
       "src": "dist/app.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/**"]
+        "includeFiles": [
+          "dist/**"
+        ],
+        "maxDuration": 60
       }
     }
   ],
@@ -20,4 +23,3 @@
     }
   ]
 }
-

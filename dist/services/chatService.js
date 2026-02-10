@@ -5,12 +5,12 @@ import Project from "../models/Project.js";
 // ─── Constants ───────────────────────────────────────────────────────
 const SYSTEM_PROMPT_CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 const MODELS = [
+    "gemini-1.5-flash",
+    "gemini-2.0-flash",
+    "gemini-2.5-flash",
     "gemini-3-flash-preview",
     "gemini-3-pro-preview",
-    "gemini-2.5-flash",
     "gemini-2.5-pro",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
 ];
 // ─── Service ─────────────────────────────────────────────────────────
 class ChatService {
@@ -28,23 +28,31 @@ class ChatService {
             if (!message) {
                 return res.status(400).json({ message: "Message is required" });
             }
+            console.time("getSystemPrompt");
             const systemPrompt = await this.getSystemPrompt();
+            console.timeEnd("getSystemPrompt");
             const client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
             let lastError = null;
             for (const modelName of MODELS) {
                 try {
+                    console.time(`generate:${modelName}`);
                     const result = await client.models.generateContent({
                         model: modelName,
                         contents: message,
                         config: { systemInstruction: systemPrompt },
                     });
+                    console.timeEnd(`generate:${modelName}`);
                     return res.status(200).json({ message: result.text });
                 }
                 catch (error) {
+                    console.timeEnd(`generate:${modelName}`); // Ensure timer ends on error
+                    console.error(`Error with model ${modelName}:`, error.message);
                     lastError = error;
                     if (error.status === 429)
                         continue; // quota exceeded → try next model
-                    break; // other errors → stop trying
+                    // If it's a timeout error (although axios timeout is not set here, vercel kills it), we might want to try next.
+                    // But generally break on non-429.
+                    break;
                 }
             }
             // All model attempts failed
@@ -57,6 +65,7 @@ class ChatService {
             res.status(status).json({ message: userFriendlyMessage, error: lastError?.message });
         }
         catch (error) {
+            console.error("ChatService Error:", error);
             res.status(500).json({ message: "Internal Server Error", error: error.message });
         }
     }
