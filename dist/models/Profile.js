@@ -12,6 +12,7 @@ const ProfileSchema = new Schema({
     cv: { type: String, required: true },
     github: { type: String, required: true },
     linkedin: { type: String, required: true },
+    cvContent: { type: String, required: false },
 });
 const Profile = model('Profile', ProfileSchema);
 export default Profile;

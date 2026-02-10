@@ -1,4 +1,4 @@
-import {model,Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 const ProfileSchema: Schema = new Schema({
     userName: { type: String, required: true },
     title: { type: String, required: true },
@@ -12,6 +12,7 @@ const ProfileSchema: Schema = new Schema({
     cv: { type: String, required: true },
     github: { type: String, required: true },
     linkedin: { type: String, required: true },
+    cvContent: { type: String, required: false },
 
 });
 

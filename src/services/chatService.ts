@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { GoogleGenAI } from "@google/genai";
-import axios from "axios";
-import pdfParse from "pdf-parse";
 
 import Profile from "../models/Profile.js";
 import Skill from "../models/Skill.js";
@@ -98,14 +96,7 @@ class ChatService {
             throw new Error("Profile data not found to provide context for the AI.");
         }
 
-        let cvContent = "";
-        if (profile.cv) {
-            try {
-                cvContent = await this.getCVContent(profile.cv as string);
-            } catch (err) {
-                console.error("Error parsing CV:", err);
-            }
-        }
+        const cvContent = (profile as any).cvContent || "CV content not available.";
 
         this.cachedSystemPrompt = this.buildSystemPrompt(profile, skills, projects, cvContent);
         this.lastCacheUpdate = now;
@@ -113,19 +104,8 @@ class ChatService {
         return this.cachedSystemPrompt;
     }
 
-    /**
-     * Fetches a PDF from a URL and extracts its text content.
-     */
-    private async getCVContent(url: string): Promise<string> {
-        try {
-            const response = await axios.get(url, { responseType: "arraybuffer" });
-            const dataBuffer = Buffer.from(response.data);
-            const result = await pdfParse(dataBuffer);
-            return result.text;
-        } catch (error) {
-            throw new Error(`Failed to parse CV: ${error}`);
-        }
-    }
+
+
 
     /**
      * Assembles the full system prompt string from portfolio data.
