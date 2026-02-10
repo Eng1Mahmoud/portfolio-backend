@@ -5,10 +5,11 @@ import Project from "../models/Project.js";
 // ─── Constants ───────────────────────────────────────────────────────
 const SYSTEM_PROMPT_CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 const MODELS = [
-    "gemini-2.0-flash",
     "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-1.5-flash-002",
+    "gemini-1.5-flash-001",
     "gemini-flash-latest",
-    "gemini-pro-latest",
 ];
 // ─── Service ─────────────────────────────────────────────────────────
 class ChatService {
