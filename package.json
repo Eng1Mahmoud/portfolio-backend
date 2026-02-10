@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./dist/app.js",
     "dev": "nodemon",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf node_modules/pdfjs-dist && rimraf dist && tsc",
     "add-build": "git add dist",
     "prepare": "husky install"
   },
@@ -40,6 +40,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
     "multer": "^2.0.1",
-    "pdf-parse": "^1.1.1"
+    "pdf-parse": "1.1.1"
   }
 }
