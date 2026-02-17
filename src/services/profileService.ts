@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Profile from "../models/Profile.js";
 import axios from "axios";
-import pdfParse from "pdf-parse";
+import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
 class ProfileService {
     async createProfile(req: Request, res: Response) {
@@ -65,9 +65,20 @@ class ProfileService {
     private async getCVContent(url: string): Promise<string> {
         try {
             const response = await axios.get(url, { responseType: "arraybuffer" });
-            const dataBuffer = Buffer.from(response.data);
-            const result = await pdfParse(dataBuffer);
-            return result.text;
+            const data = new Uint8Array(response.data);
+            const pdf = await getDocument({ data, useSystemFonts: true }).promise;
+
+            const textParts: string[] = [];
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items
+                    .map((item: any) => item.str)
+                    .join(" ");
+                textParts.push(pageText);
+            }
+
+            return textParts.join("\n");
         } catch (error) {
             throw new Error(`Failed to parse CV: ${error}`);
         }
