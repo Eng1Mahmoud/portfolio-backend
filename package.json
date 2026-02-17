@@ -39,6 +39,6 @@
     "mongoose": "^8.10.1",
     "multer": "^2.0.1",
     "patch-package": "^8.0.1",
-    "pdfjs-dist": "^5.4.624"
+    "unpdf": "^1.4.0"
   }
 }

@@ -1,6 +1,6 @@
 import Profile from "../models/Profile.js";
 import axios from "axios";
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { extractText, getDocumentProxy } from "unpdf";
 class ProfileService {
     async createProfile(req, res) {
         try {
@@ -65,17 +65,9 @@ class ProfileService {
         try {
             const response = await axios.get(url, { responseType: "arraybuffer" });
             const data = new Uint8Array(response.data);
-            const pdf = await getDocument({ data, useSystemFonts: true }).promise;
-            const textParts = [];
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const content = await page.getTextContent();
-                const pageText = content.items
-                    .map((item) => item.str)
-                    .join(" ");
-                textParts.push(pageText);
-            }
-            return textParts.join("\n");
+            const pdf = await getDocumentProxy(data);
+            const { text } = await extractText(pdf, { mergePages: true });
+            return text;
         }
         catch (error) {
             throw new Error(`Failed to parse CV: ${error}`);
