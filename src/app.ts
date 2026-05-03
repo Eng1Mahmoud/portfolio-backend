@@ -7,6 +7,8 @@ import { protect } from "./middlewares/authMiddleware.js";
 import ProfileRouter from "./routes/profileRoutes.js";
 import SkillsRouter from "./routes/skillsRoutes.js";
 import ProjectsRouter from "./routes/projectsRoutes.js";
+import EducationRouter from "./routes/educationRoutes.js";
+import ExperienceRouter from "./routes/experienceRoutes.js";
 import UploadRouter from "./routes/uploadRoutes.js";
 import AuthRouter from "./routes/authRoutes.js";
 import ChatRouter from "./routes/chatRoutes.js";
@@ -45,6 +47,8 @@ app.use("/api/auth", AuthRouter);
 app.use("/api/profile", ProfileRouter);
 app.use("/api/skills", SkillsRouter);
 app.use("/api/projects", ProjectsRouter);
+app.use("/api/education", EducationRouter);
+app.use("/api/experience", ExperienceRouter);
 app.use("/api/upload", UploadRouter);
 app.use("/api/chat", ChatRouter);
 
