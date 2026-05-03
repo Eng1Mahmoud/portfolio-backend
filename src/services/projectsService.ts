@@ -45,7 +45,7 @@ class ProjectsService {
         try {
             const projects = await Project.find()
                 .select("-createdAt")
-                .sort({ createdAt: -1 });
+                .sort({ order: 1, createdAt: -1 });
 
             res.status(200).json({
                 message: "Projects retrieved successfully",

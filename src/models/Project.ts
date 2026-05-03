@@ -15,11 +15,16 @@ const projectSchema = new Schema({
     },
     demoLink: {
         type: String,
-        required: true,
+        required: false,
     },
     githubLink: {
         type: String,
-        required: true,
+        required: false,
+    },
+    order: {
+        type: Number,
+        required: false,
+        default: 0
     },
     createdAt: {
         type: Date,
@@ -28,5 +33,4 @@ const projectSchema = new Schema({
 });
 
 const Project = model('Projects', projectSchema);
-
 export default Project;
