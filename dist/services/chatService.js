@@ -4,6 +4,7 @@ import Skill from "../models/Skill.js";
 import Project from "../models/Project.js";
 // ─── Constants ───────────────────────────────────────────────────────
 const SYSTEM_PROMPT_CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+const MAX_MESSAGE_LENGTH = 1000;
 const MODELS = [
     "gemini-2.5-flash",
     "gemini-2.0-flash",
@@ -24,8 +25,15 @@ class ChatService {
     async getChatResponse(req, res) {
         try {
             const { message } = req.body;
-            if (!message) {
+            if (typeof message !== "string" || !message.trim()) {
                 return res.status(400).json({ message: "Message is required" });
+            }
+            // Guards the GEMINI_API_KEY bill: this endpoint is public, so the
+            // input size has to be bounded independently of the body parser.
+            if (message.length > MAX_MESSAGE_LENGTH) {
+                return res.status(413).json({
+                    message: `Message is too long. Please keep it under ${MAX_MESSAGE_LENGTH} characters.`,
+                });
             }
             console.time("getSystemPrompt");
             const systemPrompt = await this.getSystemPrompt();
