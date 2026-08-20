@@ -35,7 +35,10 @@ class SkillsService {
     }
     async getAllSkills(req, res) {
         try {
-            const skills = await Skill.find().select("name imageUrl _id");
+            // Exclude the noise rather than allow-list the payload: an allow-list
+            // silently drops every field added later, which is exactly what
+            // happened to `category`.
+            const skills = await Skill.find().select("-createdAt -updatedAt -__v");
             res.status(200).json({
                 skills: skills,
             });
@@ -46,7 +49,7 @@ class SkillsService {
     }
     async getSkillById(req, res) {
         try {
-            const skill = await Skill.findById(req.params.id).select("name imageUrl _id");
+            const skill = await Skill.findById(req.params.id).select("-createdAt -updatedAt -__v");
             res.status(200).json({
                 skill: skill,
             });
