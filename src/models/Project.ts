@@ -21,6 +21,10 @@ const projectSchema = new Schema({
         type: String,
         required: false,
     },
+    technologies: {
+        type: [String],
+        default: [],
+    },
     order: {
         type: Number,
         required: false,
