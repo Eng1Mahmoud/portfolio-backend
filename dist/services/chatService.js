@@ -2,9 +2,16 @@ import { GoogleGenAI } from "@google/genai";
 import Profile from "../models/Profile.js";
 import Skill from "../models/Skill.js";
 import Project from "../models/Project.js";
+import Recommendation from "../models/Recommendation.js";
 // ─── Constants ───────────────────────────────────────────────────────
 const SYSTEM_PROMPT_CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 const MAX_MESSAGE_LENGTH = 1000;
+/**
+ * The system prompt is cached, but it still ships with every request, so its
+ * size is a per-message cost. Recommendations are the one section that grows
+ * without bound over time — cap it and keep the strongest ones.
+ */
+const MAX_RECOMMENDATIONS_IN_PROMPT = 8;
 const MODELS = [
     "gemini-2.5-flash",
     "gemini-2.0-flash",
@@ -86,28 +93,42 @@ class ChatService {
         if (this.cachedSystemPrompt && now - this.lastCacheUpdate < SYSTEM_PROMPT_CACHE_DURATION) {
             return this.cachedSystemPrompt;
         }
-        const [profile, skills, projects] = await Promise.all([
+        const [profile, skills, projects, recommendations] = await Promise.all([
             Profile.findOne(),
             Skill.find().select("name yearsOfExperience"),
             Project.find().select("title description demoLink githubLink"),
+            // Featured first, then newest — the same order the site shows them.
+            Recommendation.find()
+                .select("name role company relation text")
+                .sort({ featured: -1, date: -1 })
+                .limit(MAX_RECOMMENDATIONS_IN_PROMPT),
         ]);
         if (!profile) {
             throw new Error("Profile data not found to provide context for the AI.");
         }
         const cvContent = profile.cvContent || "CV content not available.";
-        this.cachedSystemPrompt = this.buildSystemPrompt(profile, skills, projects, cvContent);
+        this.cachedSystemPrompt = this.buildSystemPrompt(profile, skills, projects, cvContent, recommendations);
         this.lastCacheUpdate = now;
         return this.cachedSystemPrompt;
     }
     /**
      * Assembles the full system prompt string from portfolio data.
      */
-    buildSystemPrompt(profile, skills, projects, cvContent = "") {
+    buildSystemPrompt(profile, skills, projects, cvContent = "", recommendations = []) {
         const skillsList = skills
             .map((s) => `- ${s.name}${s.yearsOfExperience ? ` (${s.yearsOfExperience} years)` : ""}`)
             .join("\n");
         const projectsList = projects
             .map((p) => `- ${p.title}: ${p.description}`)
+            .join("\n");
+        // The relation matters as much as the quote: "his manager said" carries
+        // weight that "a university friend said" does not, and without it the
+        // model would present every quote as if it came from a colleague.
+        const recommendationsList = recommendations
+            .map((r) => {
+            const at = r.company ? ` at ${r.company}` : "";
+            return `- ${r.name} (${r.role}${at}) — relationship: ${r.relation}:\n  "${r.text}"`;
+        })
             .join("\n");
         return `
 You are a highly professional and helpful AI assistant representing Mahmoud Mohamed. Your tone should be polished, knowledgeable, and inviting.
@@ -116,15 +137,16 @@ Your mission:
 1. Provide detailed and well-structured answers about Mahmoud's background, skills, and projects using ONLY the provided context.
 2. **Consult CV Data**: Use the provided CV text below to answer specific questions about Mahmoud's work history, certifications, or detailed experiences not covered in the profile summary.
 3. **Prioritize Strong Projects**: When asked about projects, always mention and detail these first: **World Chat App**, **Direct Rent**, **El-Baraka Market**, **Watch Store**, and **Bus Booking**. These represent his advanced full-stack and professional experience.
-4. Use Markdown for formatting:
+4. **Recommendations**: When asked what people say about Mahmoud, what he is like to work with, or for references or testimonials, draw on the Recommendations section below. Always name the person and how they know Mahmoud (manager, colleague, freelance client, or university friend) — a manager's assessment and a university friend's differ in weight, and the reader needs to tell them apart. Quote only what is written there; never invent a recommendation, a name, or a job title.
+5. Use Markdown for formatting:
    - Use bold titles for clarity.
    - Use ordered (numbered) lists (e.g., 1. , 2. , etc.) when explaining steps or listing multiple items to ensure clarity.
    - Use bullet points (- or *) for listing features, skills, or projects.
    - ALWAYS use lists when providing multiple pieces of information to keep the layout organized.
-5. Use emojis in a balanced way (typically 2-4 per response). They should make the response feel inviting but should not be excessive or used in every single sentence.
-6. Keep vertical spacing compact: Avoid using triple newlines or excessive empty space between paragraphs and list items.
-7. If the user input is nonsensical, gibberish, or completely unclear (e.g., "jbjfj"), politely acknowledge that you don't understand and offer to help them with information about Mahmoud's professional profile.
-8. If asked about something not in the context, politely explain you only have information about Mahmoud's professional profile and suggest they contact him directly.
+6. Use emojis in a balanced way (typically 2-4 per response). They should make the response feel inviting but should not be excessive or used in every single sentence.
+7. Keep vertical spacing compact: Avoid using triple newlines or excessive empty space between paragraphs and list items.
+8. If the user input is nonsensical, gibberish, or completely unclear (e.g., "jbjfj"), politely acknowledge that you don't understand and offer to help them with information about Mahmoud's professional profile.
+9. If asked about something not in the context, politely explain you only have information about Mahmoud's professional profile and suggest they contact him directly.
 
 Mahmoud Mohamed's Information:
 - Name: ${profile.userName}
@@ -138,6 +160,9 @@ ${skillsList}
 
 Projects:
 ${projectsList}
+
+Recommendations (what people who worked or studied with Mahmoud have said about him):
+${recommendationsList || "No recommendations available."}
 
 ---
 ADDITIONAL CV CONTEXT (Extracted from Mahmoud's Resume):
