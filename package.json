@@ -10,9 +10,8 @@
     "start": "node ./dist/app.js",
     "dev": "nodemon",
     "build": "rimraf dist && tsc",
-    "add-build": "git add dist",
     "prepare": "husky install",
-    "postinstall": "patch-package"
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
