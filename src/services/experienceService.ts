@@ -45,7 +45,7 @@ class ExperienceService {
         try {
             const experiences = await Experience.find()
                 .select("-createdAt")
-                .sort({ createdAt: -1 });
+                .sort({ order: 1, createdAt: -1 });
 
             res.status(200).json({
                 message: "Experiences retrieved successfully",

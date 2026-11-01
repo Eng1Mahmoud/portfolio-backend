@@ -33,6 +33,11 @@ const experienceSchema = new Schema({
         type: String,
         required: false,
     },
+    order: {
+        type: Number,
+        required: false,
+        default: 0,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
